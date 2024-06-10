@@ -4,13 +4,20 @@ from aiogram.types import KeyboardButton, Message, ReplyKeyboardMarkup, ReplyKey
 from aiogram.filters import Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
-
+from ml import *
 form_router = Router()
 
 
 class Form(StatesGroup):
     state_1 = State()
     state_2 = State()
+    name = State()
+    weight = State()
+    len1 = State()
+    len2 = State()
+    len3 = State()
+    height = State()
+    width = State()
 
 
 @form_router.message(Command(commands=['start']))
@@ -26,11 +33,15 @@ async def start(message: Message, state: FSMContext) -> None:
 Высота - высота рыбы в сантиметрах
 Ширина - диагональная ширина в сантиметрах
 Вводите данные, и я помогу вам узнать вес вашей рыбы!
+
+Введите названия рыбы:
     """
     )
-    await state.set_state(Form.state_2)
+    await state.set_state(Form.name)
 
 
-@form_router.message(Form.state_2)
+@form_router.message(Form.name)
 async def get_values(message: Message, state: FSMContext) -> None:
-    await message.answer(message.text)
+    data = dict()
+    data['Bream'] = message.text
+    await state.set_state(Form.weight)
